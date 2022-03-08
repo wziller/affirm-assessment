@@ -86,6 +86,10 @@ export const MerchantConfigurationModel = (sequelize) => sequelize.define('Merch
     type: DataTypes.DECIMAL(10, 2),
     allowNull: true,
   },
+  prequal_enabled: {
+    type: DataTypes.BOOLEAN(),
+    allowNull: false,
+  }
 });
 
 /*
