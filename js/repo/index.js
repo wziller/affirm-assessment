@@ -67,8 +67,10 @@ export class ManualOverrideRepo {
 export class MerchantRepo {
   static get_merchant_configuration = async (id) =>
     MerchantConfiguration.findByPk(id);
-  static create_merchant_configuration = async (new_config_object) =>
+
+  static set_merchant_configuration = async (new_config_object) =>
     MerchantConfiguration.create(new_config_object);
+
   static update_merchant_configuration = async (updated_config_object) => {
     //Destructures incoming object into variables
     const {
@@ -78,14 +80,15 @@ export class MerchantRepo {
       maximum_loan_amount,
     } = updated_config_object;
 
-    MerchantConfiguration.update(
+    const updatedMerchantConfig = await MerchantConfiguration.update(
       { prequal_enabled, minimum_loan_amount, maximum_loan_amount },
       {
-        where: { merchant_id },
+        where: { merchant_id: merchant_id },
         returning: true,
         plain: true,
       }
     );
+    return updatedMerchantConfig;
   };
 }
 

@@ -8,6 +8,15 @@ import {
 
 const router = express.Router();
 
+const validateMerchantRange = (merchantConfig) => {
+  const { data } = merchantConfig;
+  const { minimum_loan_amount, maximum_loan_amount } = merchantConfig;
+
+  if (minimum_loan_amount >= maximum_loan_amount) return false;
+
+  return true;
+};
+
 /* GET Merchant Config */
 router.get("/:merchantId", async (req, res, next) => {
   const { merchantId } = req.params;
@@ -26,7 +35,7 @@ router.get("/:merchantId", async (req, res, next) => {
 });
 
 /* POST Merchant Config */
-router.post("/", async (req, res, next) => {
+router.post("/set_merchant_config", async (req, res, next) => {
   const { data } = req.body;
 
   const merchant_conf = await MerchantRepo.get_merchant_configuration(
@@ -39,18 +48,25 @@ router.post("/", async (req, res, next) => {
       field: "merchant_id",
       message: "Merchant Already Exists",
     });
+  } else if (!validateMerchantRange(data)) {
+    res.status(400).send({
+      field: "maximum_loan_amount",
+      message: "Invalid Range",
+    });
   } else {
     //if merchant config does not exit, create a new entry
-    MerchantRepo.create_merchant_configuration(data);
+    let newMerchant = await MerchantRepo.set_merchant_configuration(data);
+    res.status(200).send(newMerchant)
   }
 });
 
-router.put("/", async (req, res, next) => {
+router.put("/set_merchant_config/", async (req, res, next) => {
   const { data } = req.body;
-  console.log("===================> DATA", data);
+
   const merchant_conf = await MerchantRepo.get_merchant_configuration(
     data.merchant_id
   );
+
   //Check is there is an exisiting merchant configuration
   if (!merchant_conf) {
     //If merchant config already exists modify the exisiting entry
@@ -58,9 +74,16 @@ router.put("/", async (req, res, next) => {
       field: "merchant_id",
       message: "Merchant Id Does Not Exist",
     });
+    //Validate Merchant data range
+  } else if (!validateMerchantRange(data)) {
+    res.status(400).send({
+      field: "maximum_loan_amount",
+      message: "Invalid Range",
+    });
   } else {
     //if merchant config does not exit, create a new entry
-    MerchantRepo.create_merchant_configuration(data);
+    await MerchantRepo.update_merchant_configuration(data);
+    res.status(200).send(data);
   }
 });
 
