@@ -7,9 +7,9 @@ import { closeDb, syncDb } from "./_db";
 describe("Test Merchant Config Routes", () => {
   beforeAll(syncDb);
 
-  test("POST /api/merchant_config/set_merchant_config", async () => {
+  test("POST /api/set_merchant_config", async () => {
     let res = await request(app)
-      .post("/api/merchant_config/set_merchant_config")
+      .post("/api/set_merchant_config")
       .set("Content-Type", "application/json")
       .send({
         "data": {
@@ -31,7 +31,7 @@ describe("Test Merchant Config Routes", () => {
 
   test("Will not allow a merchant to create and invalid range when updating", async () => {
     let res = await request(app)
-      .put("/api/merchant_config/set_merchant_config")
+      .put("/api/set_merchant_config")
       .set("Content-Type", "application/json")
       .send({
         data: {
@@ -51,7 +51,7 @@ describe("Test Merchant Config Routes", () => {
   test("Will not allow a merchant to create and invalid range upon creation", async () => {
     //Action
     let res = await request(app)
-      .post("/api/merchant_config/set_merchant_config")
+      .post("/api/set_merchant_config")
       .set("Content-Type", "application/json")
       .send({
         data: {
@@ -70,7 +70,7 @@ describe("Test Merchant Config Routes", () => {
 
   test("Will not allow duplicate merchant configs", async () => {
     let res = await request(app)
-      .post("/api/merchant_config/set_merchant_config")
+      .post("/api/set_merchant_config")
       .set("Content-Type", "application/json")
       .send({
         data: {

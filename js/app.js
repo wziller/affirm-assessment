@@ -3,11 +3,11 @@ import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-
 import indexRouter from "./routes/index.js";
 import apiRouter from "./routes/api/index.js";
 import apiLoanApplicationRouter from "./routes/api/loan_application.js";
 import apiMerchantConfigRouter from "./routes/api/merchant_configuration.js";
+import apiSetMerchantConfigRouter from "./routes/api/set_merchant_configuration.js";
 
 const __dirname = path.resolve();
 
@@ -28,8 +28,9 @@ app.use(cookieParser());
 app.get("/health-check", (req, res) => res.sendStatus(200));
 app.use("/", indexRouter);
 app.use("/api", apiRouter);
-app.use("/api/loan_application/", apiLoanApplicationRouter);
-app.use("/api/merchant_config/", apiMerchantConfigRouter);
+app.use("/api/loan_application", apiLoanApplicationRouter);
+app.use("/api/merchant_config", apiMerchantConfigRouter);
+app.use("/api/set_merchant_config", apiSetMerchantConfigRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
