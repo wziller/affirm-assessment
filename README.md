@@ -1,3 +1,5 @@
+![Please Click Here to View the Wiki](https://github.com/wziller/affirm-assessment/wiki)
+
 # Upward Take Home Assignment
 
 Welcome to the Affirm take home assignment for the Upwards program! In this particular question, you will be designing a miniature version of Affirm with the guided instructions below. 
